@@ -56,10 +56,60 @@ No realmente, porsupuesto que el programa cumplia la función de elegir colores 
 
 ### Actividad 3
 
+- En tus propias palabras cuál es la diferencia entre una distribución uniforme y una no uniforme de números aleatorios.
 
+La diferencia sería los parametros, mientras que no uniforme no cuenta con parametros, la uniforme si cuenta con paraametros para su distribución, en este caso de media y desviación estandar.
+
+- Modifica el código de la caminata aleatoria para que utilice una distribución no uniforme, favoreciendo el movimiento hacia la derecha.
+
+```js
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
+let walker;
+
+function setup() {
+  createCanvas(640, 240);
+  walker = new Walker();
+  background(255);
+}
+
+function draw() {
+  walker.step();
+  walker.show();
+}
+
+class Walker {
+  constructor() {
+    this.x = width / 2;
+    this.y = height / 2;
+  }
+
+  show() {
+    stroke(0);
+    point(this.x, this.y);
+  }
+
+  step() {
+// se cambia random(4) por randomGaussian(0) para favorecer x++:
+    const choice = floor(randomGaussian(0,1));
+    if (choice == 0) {
+      this.x++;
+    } else if (choice == 1) {
+      this.x--;
+    } else if (choice == 2) {
+      this.y++;
+    } else {
+      this.y--;
+    }
+  }
+}
+```
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
