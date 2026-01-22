@@ -146,10 +146,31 @@ function draw() {
 
 ### Actividad 5
 
+Ahora vas a:
+
+- Crea un nuevo sketch en p5.js donde modifiques uno de los ejemplos anteriores y adiciones de Lévy flight.
+- Explica por qué usaste esta técnica y qué resultados esperabas obtener.
+
+
+
+- Copia el código en tu bitácora.
+
+
+
+- Coloca en enlace a tu sketch en p5.js en tu bitácora.
+
+[Actividad 5 - Simulación FGT](https://editor.p5js.org/felipegtupb/sketches/BQm6dtnQ_)
+
+- Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
+
+<img width="253" height="250" alt="image" src="https://github.com/user-attachments/assets/8938191e-28d3-4a04-bc2b-32685d3e82ee" />
+<img width="249" height="250" alt="image" src="https://github.com/user-attachments/assets/19cd26db-1699-4e21-8ad6-885d55a6fa13" />
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
