@@ -155,7 +155,35 @@ Usé esta técnica usé para que la diferenciación de las probabilidades sea a�
 
 - Copia el código en tu bitácora.
 
+```js
+function setup() {
+  createCanvas(400, 400);
+}
 
+function draw() {
+  frameRate(6);
+  background(220);
+  rect(0, 200 - 35, acceptreject(), 70);
+}
+
+function acceptreject() {
+  while (true) {
+    r1 = random(400);
+    probability = r1;
+    r2 = random(400);
+
+    if (r1 > 200) {
+      fill(0, 0, 225);
+    } else {
+      fill(225, 0, 0);
+    }
+
+    if (r2 < probability) {
+      return r1;
+    }
+  }
+}
+```
 
 - Coloca en enlace a tu sketch en p5.js en tu bitácora.
 
@@ -166,11 +194,22 @@ Usé esta técnica usé para que la diferenciación de las probabilidades sea a�
 <img width="253" height="250" alt="image" src="https://github.com/user-attachments/assets/8938191e-28d3-4a04-bc2b-32685d3e82ee" />
 <img width="249" height="250" alt="image" src="https://github.com/user-attachments/assets/19cd26db-1699-4e21-8ad6-885d55a6fa13" />
 
+### Actividad 6
+
+Una vez has entendido el concepto de ruido Perlin, vas a pensar en una nueva manera de visualizarlo.
+
+Crea un nuevo sketch en p5.js donde los visualices.
+Explica el concepto qué resultados esberabas obtener.
+Copia el código en tu bitácora.
+Coloca en enlace a tu sketch en p5.js en tu bitácora.
+Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
