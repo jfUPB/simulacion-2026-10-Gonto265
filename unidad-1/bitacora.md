@@ -107,9 +107,49 @@ class Walker {
 }
 ```
 
+### Actividad 4
+
+Una vez has entendido el concepto de distribución normal, vas a pensar en una nueva manera de visualizarlo.
+
+- Crea un nuevo sketch en p5.js que represente una distribución normal.
+- Copia el código en tu bitácora.
+- Coloca en enlace a tu sketch en p5.js en tu bitácora.
+- Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
+
+[Actividad 4 - Simulación FGT](https://editor.p5js.org/felipegtupb/sketches/DvRkkfW_f)
+
+<img width="496" height="497" alt="image" src="https://github.com/user-attachments/assets/7b69cb9c-26de-4d38-ad40-2c1b336facfb" />
+
+```
+function setup() {
+  createCanvas(400, 400);
+  background(220);
+}
+
+function draw() {
+  frameRate(10)
+  let x = randomGaussian(250,60)
+  let y = randomGaussian(250,60)
+  let r = random(225)
+  let g = random(225)
+  let b = random(225)
+  let a = random(225)
+  
+  noStroke()
+  fill(r,g,b,a)
+  circle(x,200,10)
+  circle(200,x,10)
+  circle(x,x,10)
+  circle(x,-x+400,10)
+}
+```
+
+### Actividad 5
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
