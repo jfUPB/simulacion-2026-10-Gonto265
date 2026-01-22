@@ -151,7 +151,7 @@ Ahora vas a:
 - Crea un nuevo sketch en p5.js donde modifiques uno de los ejemplos anteriores y adiciones de Lévy flight.
 - Explica por qué usaste esta técnica y qué resultados esperabas obtener.
 
-
+Usé esta técnica usé para que la diferenciación de las probabilidades sea aún más evidente además de dar una visualización más lineal de las mismas. Lo que esperaba fué exactamente lo que resultó, una barra que cambia su largo en el eje x según los valores que ofrece Lévy Flight, que además cambia su color según el lado del umbral (200) esté.
 
 - Copia el código en tu bitácora.
 
@@ -171,6 +171,7 @@ Ahora vas a:
 
 
 ## Bitácora de reflexión
+
 
 
 
