@@ -201,25 +201,75 @@ Una vez has entendido el concepto de ruido Perlin, vas a pensar en una nueva man
 - Crea un nuevo sketch en p5.js donde los visualices.
 - Explica el concepto qué resultados esberabas obtener.
 
-
+Espero obtener variedad de figuras, que puedan identificarse como insectos voladores, de diferentes tamaños y tonalidades de amarillo volando por el canvas de forma aleatoria según el patrón Perlin Noise para un movimiento orgánico.
 
 - Copia el código en tu bitácora.
 
+```js
+let walkers = [];
+let total = 40;
 
+function setup() {
+  createCanvas(640, 240);
+
+  for (let i = 0; i < total; i++) {
+    walkers.push(new Walker());
+  }
+}
+
+function draw() {
+  background(200);
+
+  for (let w of walkers) {
+    w.step();
+    w.show();
+  }
+}
+
+class Walker {
+  constructor() {
+    this.colorsillo = random(255);
+    this.tx = random(1000);
+    this.ty = random(1000);
+    this.velocidad = random(0.005, 0.02);
+    this.tamanoygeneral = random(5, 8);
+    this.tamanorectx = random(10, 15);
+  }
+
+  step() {
+    this.x = map(noise(this.tx), 0, 1, 0, width);
+    this.y = map(noise(this.ty), 0, 1, 0, height);
+
+    this.tx += this.velocidad;
+    this.ty += this.velocidad;
+  }
+
+  show() {
+    noStroke();
+    fill(127);
+    circle(this.x + 10, this.y, this.tamanoygeneral);
+    circle(this.x + 3, this.y, this.tamanoygeneral);
+    fill(this.colorsillo, this.colorsillo, 0);
+    rect(this.x, this.y, this.tamanorectx, this.tamanoygeneral - 3);
+  }
+}
+
+```
 
 - Coloca en enlace a tu sketch en p5.js en tu bitácora.
 
-
+[Actividad 6 (Candelillas y moscas) - simulación FGT](https://editor.p5js.org/felipegtupb/sketches/ZXTDVDOj1)
 
 - Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
 
-
+<img width="795" height="296" alt="image" src="https://github.com/user-attachments/assets/f69f2597-5199-41e1-80a0-74be6992c311" />
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
