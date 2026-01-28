@@ -266,9 +266,138 @@ class Walker {
 
 ## Bitácora de aplicación 
 
+### Actividad 7
 
+**Creación de obra generativa**
+
+Vas a crear una obra generativa interactiva en tiempo real utilizando los conceptos de aleatoriedad que has aprendido en esta unidad.
+Tu obra debe:
+
+- Usar al menos tres conceptos estudiados en esta unidad COMBINADOS de manera creativa y coherente.
+- Tu obra de ser interactiva y generativa en tiempo real. Puedes usar el mouse, el teclado o cualquier otro sensor de entrada para interactuar con la obra.
+
+Reporta en tu bitácora lo siguiente:
+
+- Un texto donde expliques el concepto de obra generativa.
+
+Quiero que mi pantalla por defecto cambie sus colores de forma lenta y orgánica para lo que usaré el ruido perlin, además ajustaré algunos inputs de teclado para añadir figuras, con la particularidad de que mientras mantenga el input, el click del mouse, empezará una rafaga de un tipo de forma determinado en el que el tamaño y color sean aleatorios según ruido Perlin y el Levy Flight.
+
+- Copia el código en tu bitácora.
+
+```
+let colorManager;
+let fgManager;
+let trailLayer;
+let figures = [];
+
+function setup() {
+  createCanvas(700, 590);
+
+  colorManager = new RandomColorRampGenerator();
+  trailLayer = createGraphics(width, height);
+  trailLayer.colorMode(RGB, 255);
+  trailLayer.noStroke();
+}
+
+function draw() {
+  colorManager.colorChange();
+
+  background(colorManager.r, colorManager.g, colorManager.b);
+  image(trailLayer, 0, 0);
+
+  if (mouseIsPressed && frameCount % 5 === 0) {
+    figures.push(new FigureGenerator(trailLayer));
+  }
+
+  for (let f of figures) {
+    f.update();
+    f.draw();
+  }
+}
+
+function LevyFlight() {
+  let r = random(1);
+  let step;
+  if (r < 0.05) {
+    step = random(0, 200);
+  } else {
+    step = random(0, 50);
+  }
+  return step;
+}
+
+class RandomColorRampGenerator {
+  constructor() {
+    this.tr = random(1000);
+    this.tg = random(1000);
+    this.tb = random(1000);
+  }
+
+  colorChange() {
+    this.r = Math.floor(map(noise(this.tr), 0, 1, 0, 255));
+    this.g = Math.floor(map(noise(this.tg), 0, 1, 0, 255));
+    this.b = Math.floor(map(noise(this.tb), 0, 1, 0, 255));
+    this.tr += 0.04;
+    this.tg += 0.04;
+    this.tb += 0.04;
+    return {
+      r: this.r,
+      g: this.g,
+      b: this.b,
+    };
+  }
+}
+
+class FigureGenerator {
+  constructor(pg) {
+    this.pg = pg;
+    this.colore = new RandomColorRampGenerator();
+    this.colore.colorChange();
+
+    this.figure = floor(random(1, 4));
+    this.size = LevyFlight();
+
+    this.x = mouseX;
+    this.y = mouseY;
+  }
+
+  update() {
+    this.colore.colorChange();
+  }
+
+  draw() {
+    this.pg.fill(this.colore.r, this.colore.g, this.colore.b, 120);
+
+    if (this.figure === 1) {
+      this.pg.square(this.x, this.y, this.size);
+    } else if (this.figure === 2) {
+      this.pg.circle(this.x, this.y, this.size);
+    } else {
+      this.pg.triangle(
+        this.x,
+        this.y,
+        this.x + this.size,
+        this.y,
+        this.x + this.size / 2,
+        this.y - this.size
+      );
+    }
+  }
+}
+
+```
+
+- Coloca en enlace a tu sketch en p5.js en tu bitácora.
+
+(Actividad 7 - simulación FGT)[https://editor.p5js.org/felipegtupb/sketches/qVhVKGaEv]
+
+- Selecciona una captura de pantalla de tu sketch y colócala en tu bitácora.
+
+<img width="435.5" height="368" alt="image" src="https://github.com/user-attachments/assets/b56b99a4-cbb5-4338-995a-6de3f4822155" />
+<img width="435.5" height="368" alt="image" src="https://github.com/user-attachments/assets/ce688c3f-8245-4a0e-adee-d5781e67dd2d" />
 
 ## Bitácora de reflexión
+
 
 
 
