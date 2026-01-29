@@ -398,11 +398,30 @@ class FigureGenerator {
 
 ## Bitácora de reflexión
 
+En tu bitácora de aprendizaje. Responde con tus propias palabras a las siguientes preguntas.
 
+- Describe la diferencia fundamental entre la aleatoriedad generada por random() y la apariencia de aleatoriedad del Ruido Perlin (noise()). ¿En qué tipo de situación usarías cada una?
 
+La diferencia es que mientras el algorritmo que brinda `random()` genera valores cuyas probabilidades son exactamente iguales para cada una, por lo tanto brindando un retorno inpredecible, el algorritmo del ruido Perlin (`noise()`), es en realidad una secuencia de numeros semialeatorios pues estan diseñados para cambiar en magnitudes muy pequeñas, como estas siguen un camino establecido, en realidad, se divide en semillas con distintos caminos, por lo tanto distintos valores respecto al tiempo.
 
+`random()` lo usaría en el caso que quiera un resultado completamente aleatorio e impredecible, como el lanzamiento de un dado, y `noise()` lo usaría en el caso de que quiera generar un curso de valores orgánico que tenga la aparencia de ser aleatorio, como el vuelo de una mariposa.
 
+- Explica con tus palabras qué es una distribución de probabilidad. ¿Qué diferencia visual produce una caminata aleatoria con una distribución uniforme versus una con una distribución normal?
 
+Una distribución de probabilidad es un algorritmo que permite de una u otra forma organizar las probabilidades de uno o varios elementos.
 
+La diferencia visual entre la caminata uniforme y normal es que la uniforme tiende a abarcar el mismo espacio especifico y a dirigirse en cualquier dirección, mientras que en la normal, el desplazamiento va a tender devolver la misma dirección por iteración, por lo que el caminante va a cambiar el espacio en que recorre segun la dirección determinada.
 
+- ¿Cuál es el papel de la aleatoriedad en el arte generativo? Menciona al menos dos funciones distintas que cumple.
 
+Primero, la aleatoriedad permite instanciar distintaos resuktados de un mismo algorritmo, lo que a menudo conlleva a distintas obras únicas con el mismo estílo.
+
+Segundo, la aleatoriedad elimina el sentimiento de linealidad de una obra audiovisual, lo que a su vez significa naturalidad a los sentidos del espectador.
+
+- Piensa en tu obra final (Actividad 07). Describe uno de los conceptos de aleatoriedad que usaste y explica por qué fue una elección adecuada para lograr el efecto que buscabas.
+
+El concepto principal de mi obra fue permitir el cambio de color de todos los elementos en el canvas, dando un efecto embelezador y natural. Para esto mi ayudante fue el ruido Perlin, el cual logró las experiencias sensoriales deseadas con su transicionalidad limpia, suave y coherente.
+
+- ¿Qué es un “paseo” o “caminata” (walk) en el contexto de la simulación? ¿Qué característica particular tiene una caminata de tipo “Lévy flight”?
+
+Una caminata en el contexto de la simulación se refiere al desplazamiento de un elemento dentro de un espacio, esto generalmente a partir de valores los cuales pueden ser alterados por algorritmos según el diseño a lograr, en el caso del Levy Flight lo que este permite es dar un rumbo alterno a los valores dentro de una caminata pero con una probabilidad determinada.
