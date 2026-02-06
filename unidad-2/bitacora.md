@@ -60,10 +60,20 @@ function draw() {
   }
 }
 ```
+### Actividad 7
+
+- Cuál es el concepto del marco motion 101 y cómo se interpreta geométricamente.
+
+El marco motion 101 relaciona los elementos que conforman las mecanicas de los elementos para implementarlos en los programas, esto a partir de los dictamenes de la Física mecánica, el cual establece que la posición final de un elemento se puede predecir a partir de la suma entre la posicion inicial y su velocidad multiplicado por el cambio de tiempo. Así mismo para determinar proxima velocidad se aplica de forma similar, pues esta determinada por la velocidad inicial sumada a la multiplicación entre la aceleridad y el cambio en el tiempo. Finalmente para hallar se usa la Ley de Newton que establece que la sumatoria de fuerzas aplicadas a un elemento es igual a la multiplicación entre su masa y aceleración.
+
+- ¿Cómo se aplica motion 101 en el ejemplo?
+
+Esto en el ejemplo se refleja en el momento en que se calculan las magnitude spor medio de estas formulas y se suman los vectores para dar un efecto de movimiento de aceleración constante.
 
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
