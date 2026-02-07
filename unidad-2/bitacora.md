@@ -187,11 +187,18 @@ El marco motion 101 relaciona los elementos que conforman las mecanicas de los e
 
 Esto en el ejemplo se refleja en el momento en que se calculan las magnitude spor medio de estas formulas y se suman los vectores para dar un efecto de movimiento de aceleración constante.
 
+### Actividad 8
+
+- ¿Qué observaste cuando usas cada una de las aceleraciones propuestas?
+
+Con aceleración constante se genera unmovimiento que se siente rigido y seco, con aceleración aleatoria, se vuelve impredecible la velocidad con que se moverá el elemento en cualquier momento así que lo hace tener un movieminto interesante y orgánico, y con aceleración hacia el mouse logra además de implementar un diseño interactivo, además permite predecir no solo visual sino manualmente el moviemiento del elemento.
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
 
