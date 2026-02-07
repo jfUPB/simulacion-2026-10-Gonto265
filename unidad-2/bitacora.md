@@ -60,6 +60,123 @@ function draw() {
   }
 }
 ```
+
+### Actividad 4
+
+- ¿Qué resultado esperas obtener en el programa anterior?
+
+Espero que se impriman en consola dos lines de texto donde se muestre cada valor de dos diferentes vectores , el primero como 6 9 0 y el segundo como 20 30 0 y de tercer linea un texto que dice Only Once.
+
+- ¿Qué resultado obtuviste?
+
+Similar a mi hipotesis, sin embargo al parecer a la hora de imprimir un vector tipo p5.vector y transformarlo con toString(), lo que se escribe es p5.Vector Object : [x, y, z], lo cual no pensé que fuese de esa forma.
+
+- Recuerda los conceptos de paso por valor y paso por referencia en programación.
+
+Paso por valor = la función recibe una fotocopia
+Paso por referencia = la función recibe el original
+
+- ¿Qué tipo de paso se está realizando en el código?
+
+Se está realizando paso por referencia pues la función playingVector() logra sobreescribir los valores del vector original.
+
+- ¿Qué aprendiste?
+
+Aprendí que en el caso de necesitar que el paso de una referencia no se sobre escriba, se puede realizar la copia del elemento a pasar y se trabaja con el mismo.
+
+### Actividad 5
+
+- ¿Para qué sirve el método mag()? Nota que hay otro método llamado magSq(). ¿Cuál es la diferencia entre ambos? ¿Cuál es más eficiente?
+
+`mag()` devuelve la longitud del vector, es decir, la distancia desde el origen (0,0) hasta el punto (x,y), `magSq()` devuelve lo mismo que mag() pero sin hacer la raíz cuadrada.
+
+magSq() es más eficiente, porque la operación más costosa aquí es la raíz cuadrada (sqrt). Cuando trabajas con muchos vectores por frame (animaciones, partículas, físicas, interacciones), evitar esa raíz mejora el rendimiento.
+
+- ¿Para qué sirve el método normalize()?
+
+El método normalize() en p5.Vector sirve para convertir cualquier vector en un vector unitario (de longitud 1), sin cambiar su dirección.
+
+- Te encuentras con un periodista en la calle y te pregunta ¿Para qué sirve el método dot()? ¿Qué le responderías en un frase?
+
+El método dot() en p5.Vector calcula el producto punto (producto escalar) entre dos vectores.
+
+- El método dot() tiene una versión estática y una de instancia. ¿Cuál es la diferencia entre ambas?
+
+Ambos calculan exactamente el mismo producto punto. La diferencia no es matemática, sino cómo se llaman y desde dónde se usan.
+
+- Ahora el mismo periodista curioso de antes te pregunta si le puedes dar una intuición geométrica acerca del producto cruz. Entonces te pregunta ¿Cuál es la interpretación geométrica del producto cruz de dos vectores? Tu respuesta debe incluir qué pasa con la orientación y la magnitud del vector resultante.
+
+Geométricamengte, el vector resultante es, perpendicular al plano formado por los dos vectores originales. Si a y b están en el plano 2D (x, y), el resultado del cross apunta en el eje z. 
+
+La dirección del vector resultante sigue la regla de la mano derecha. El orden importa, Cambiar el orden invierte la dirección.
+
+La magnitud del vector resultante señala qué tan “abiertos” están los vectores entre sí. Geométricamente también indica el área del paralelogramo formado por los dos vectores. La magnitud del vector resultante es directamente proporcional a la magnitud del ángulo entre los vectores a ser operados.
+
+- ¿Para que te puede servir el método dist()?
+
+El método dist() en p5.Vector sirve para calcular la distancia real entre dos vectores (dos puntos en el plano), es decir, la distancia euclidiana entre sus posiciones.
+
+Prodia usarlos para saber si dos partículas se tocan, medir cuánto falta para llegar a un punto, crear comportamientos tipo “seguir”, “huir”, “atracción” o detectar cercanía (colisiones, interacción).
+
+- ¿Para qué sirven los métodos normalize() y limit()?
+
+Estas controlan dos cosas distintas del movimiento, `normalize()` controla la dirección y `limit()` controla la velocidad máxima (magnitud)
+
+### Actividad 6
+
+El código que genera el resultado que te pedí.
+
+```
+let u = 0;
+let speed = 0.01;
+let dir = 1;
+
+function setup() {
+  createCanvas(400, 400);
+}
+
+function draw() {
+  background(200);
+  
+  let v0 = createVector(50, 50);
+  let v1 = createVector(300, 0);
+  let v2 = createVector(0, 300);
+
+  u += speed * dir;
+  if (u >= 1 || u <= 0) dir *= -1;
+
+  let movingPoint = p5.Vector.lerp(v1, v2, u);
+
+  drawArrow(v0, v1, "red");
+  drawArrow(v0, v2, "blue");
+  drawArrow(v0, movingPoint, "purple");
+  drawArrow(p5.Vector.add(v0, v1), p5.Vector.sub(v2, v1), "green");
+}
+
+function drawArrow(base, vec, myColor) {
+  push();
+  stroke(myColor);
+  strokeWeight(3);
+  fill(myColor);
+  translate(base.x, base.y);
+  line(0, 0, vec.x, vec.y);
+  rotate(vec.heading());
+  let arrowSize = 7;
+  translate(vec.mag() - arrowSize, 0);
+  triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+  pop();
+}
+
+```
+
+¿Cómo funciona lerp() y lerpColor().
+
+lerp(a, b, t) devuelve el valor que está a un porcentaje t entre a y b. En el caso lerpColor(), pasa lo mismo pero en valores de RGB.
+
+¿Cómo se dibuja una flecha usando drawArrow()?
+
+La función drawArrow(base, vec, color) dibuja una flecha a partir de un punto base y usando un vector como dirección y longitud.
+
 ### Actividad 7
 
 - Cuál es el concepto del marco motion 101 y cómo se interpreta geométricamente.
@@ -75,5 +192,6 @@ Esto en el ejemplo se refleja en el momento en que se calculan las magnitude spo
 
 
 ## Bitácora de reflexión
+
 
 
