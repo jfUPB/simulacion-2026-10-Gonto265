@@ -195,9 +195,162 @@ Con aceleración constante se genera unmovimiento que se siente rigido y seco, c
 
 ## Bitácora de aplicación 
 
+### Actividad 9
+
+- Describe el concepto de tu obra generativa. Explica el concepto de tu obra generativa, qué regla aplicaste para la aceleración y por qué, si fue una decisión de diseño, o qué te evoca, si fue una exploración artística.
+
+Mi obra esta pensada para revivir un sentimiento casi infantil en el que posees un juguete y eres capaz de transformar el canvas mientras juegas. Uso velocidad y aceleración, esto con la intención de darle una completa sensación realista y orgánica al movimiento del objeto. Fue inicialmente una idea de tener la sensación de tener un objeto amarrado con una cuerda, fué lo que primordialmente logré y las funcionalidades de color y rebote fueron saliendo en el proceso.
+
+- El código de la aplicación.
+
+```js
+let points = [];
+let segments = 15;
+let segLength = 5;
+let circler = 30;
+
+let bgColor;
+let fgColor;
+
+function setup() {
+  background(255);
+  createCanvas(700, 600);
+
+  bgColor = color(0);
+  fgColor = color(255);
+
+  for (let i = 0; i <= segments; i++) {
+    points.push(new Point(width / 2, height / 2 + i * segLength));
+  }
+}
+
+function draw() {
+  noStroke();
+  fill(red(bgColor), green(bgColor), blue(bgColor), 50);
+     rect(0, 0, width, height);
+
+  for (let p of points) {
+    p.update();
+  }
+
+  constrainPoints();
+
+  // Revisar rebote SOLO del último punto (el círculo)
+  let last = points[points.length - 1];
+  let bounced = last.constrainToCanvas(true);
+
+  // Los demás puntos también se contienen, pero sin disparar color
+  for (let i = 0; i < points.length - 1; i++) {
+    points[i].constrainToCanvas(false);
+  }
+
+  if (bounced) {
+    randomizeColors();
+  }
+
+  // dibujar cuerda
+  stroke(fgColor);
+  noFill();
+  beginShape();
+  for (let p of points) {
+    vertex(p.pos.x, p.pos.y);
+  }
+  endShape();
+
+  // círculo
+  fill(fgColor);
+  noStroke();
+  circle(last.pos.x, last.pos.y, circler);
+}
+
+function randomizeColors() {
+  bgColor = color(random(255), random(255), random(255));
+  fgColor = color(random(255), random(255), random(255));
+}
+
+function constrainPoints() {
+  // el primer punto está amarrado al mouse
+  points[0].pos.set(mouseX, mouseY);
+
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < points.length - 1; j++) {
+      let p1 = points[j];
+      let p2 = points[j + 1];
+
+      let diff = p5.Vector.sub(p2.pos, p1.pos);
+      let d = diff.mag();
+      let error = segLength - d;
+      diff.normalize();
+      diff.mult(error * 0.5);
+
+      if (j != 0) p1.pos.sub(diff);
+      p2.pos.add(diff);
+    }
+
+    points[0].pos.set(mouseX, mouseY);
+  }
+}
+
+class Point {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.old = this.pos.copy();
+    this.bounce = 0.9;
+  }
+
+  update() {
+    let vel = p5.Vector.sub(this.pos, this.old);
+    this.old = this.pos.copy();
+    this.pos.add(vel);
+    this.pos.add(0, 0.25); // gravedad
+  }
+
+  // detectColor = true solo para el último punto
+  constrainToCanvas(detectColor = false) {
+    let vel = p5.Vector.sub(this.pos, this.old);
+    let bounced = false;
+
+    if (this.pos.x > width) {
+      this.pos.x = width;
+      this.old.x = this.pos.x + vel.x * this.bounce;
+      bounced = true;
+    }
+
+    if (this.pos.x < 0) {
+      this.pos.x = 0;
+      this.old.x = this.pos.x + vel.x * this.bounce;
+      bounced = true;
+    }
+
+    if (this.pos.y > height) {
+      this.pos.y = height;
+      this.old.y = this.pos.y + vel.y * this.bounce;
+      bounced = true;
+    }
+
+    if (this.pos.y < 0) {
+      this.pos.y = 0;
+      this.old.y = this.pos.y + vel.y * this.bounce;
+      bounced = true;
+    }
+
+    return detectColor && bounced;
+  }
+}
+```
+
+- Un enlace al proyecto en el editor de p5.js.
+
+(Actividad 9 - simulación FGT)[https://editor.p5js.org/felipegtupb/sketches/yT9P18D7b]
+
+- Selecciona capturas de pantalla representativas de tu pieza de arte generativa.
+
+<img width="881" height="758" alt="image" src="https://github.com/user-attachments/assets/65921e89-30f1-41da-b3f2-549d6be426ce" />
+<img width="880" height="754" alt="image" src="https://github.com/user-attachments/assets/b7f2cc65-18a0-484c-a7d6-27be0be6cf92" />
 
 
 ## Bitácora de reflexión
+
 
 
 
