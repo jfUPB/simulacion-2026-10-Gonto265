@@ -348,10 +348,252 @@ class Point {
 <img width="881" height="758" alt="image" src="https://github.com/user-attachments/assets/65921e89-30f1-41da-b3f2-549d6be426ce" />
 <img width="880" height="754" alt="image" src="https://github.com/user-attachments/assets/b7f2cc65-18a0-484c-a7d6-27be0be6cf92" />
 
-
 ## Bitácora de reflexión
 
+- Describe el concepto de tu obra generativa. Explica el concepto de tu obra generativa.
 
+Pensé en que podria funcionar un sistema en el que hay un depredador el cual espanta a los demás seres.
 
+- El código de la aplicación.
 
+```js
+let boids = [];
+let predator;
 
+function setup() {
+  createCanvas(900, 650);
+
+  for (let i = 0; i < 90; i++) {
+    let type = random();
+    if (type < 0.5) boids.push(new Boid(random(width), random(height), "normal"));
+    else if (type < 0.75) boids.push(new Boid(random(width), random(height), "heavy"));
+    else boids.push(new Boid(random(width), random(height), "nervous"));
+  }
+
+  // Especie atraída al depredador
+  for (let i = 0; i < 15; i++) {
+    boids.push(new Boid(random(width), random(height), "attracted"));
+  }
+
+  predator = new Predator(width / 2, height / 2);
+}
+
+function draw() {
+  background(10, 25); // rastro
+
+  predator.update();
+  predator.show();
+
+  for (let b of boids) {
+    b.flock(boids);
+    b.reactToPredator(predator);
+    b.update();
+    b.edges();
+    b.show();
+  }
+}
+
+// ================== BOID ==================
+
+class Boid {
+  constructor(x, y, type) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.random2D();
+    this.acc = createVector();
+    this.type = type;
+
+    // Configuración según especie
+    if (type === "normal") {
+      this.maxSpeed = 3;
+      this.size = 4;
+      this.color = color(180, 220, 255);
+    }
+    if (type === "heavy") {
+      this.maxSpeed = 2;
+      this.size = 8;
+      this.color = color(120, 200, 255);
+    }
+    if (type === "nervous") {
+      this.maxSpeed = 4;
+      this.size = 3;
+      this.color = color(255, 220, 120);
+    }
+    if (type === "attracted") {
+      this.maxSpeed = 3.2;
+      this.size = 5;
+      this.color = color(200, 120, 255);
+    }
+
+    this.maxForce = 0.2;
+  }
+
+  applyForce(f) {
+    this.acc.add(f);
+  }
+
+  flock(boids) {
+    let align = this.align(boids).mult(1.0);
+    let coh = this.cohesion(boids).mult(0.8);
+    let sep = this.separation(boids).mult(1.5);
+
+    this.applyForce(align);
+    this.applyForce(coh);
+    this.applyForce(sep);
+  }
+
+  reactToPredator(predator) {
+    let d = p5.Vector.dist(this.pos, predator.pos);
+
+    if (this.type === "attracted") {
+      // Esta especie busca al depredador
+      let seek = p5.Vector.sub(predator.pos, this.pos);
+      seek.setMag(this.maxSpeed);
+      seek.sub(this.vel);
+      seek.limit(this.maxForce * 1.5);
+      this.applyForce(seek);
+    } else {
+      // Las demás huyen
+      if (d < 130) {
+        let flee = p5.Vector.sub(this.pos, predator.pos);
+        flee.setMag(this.maxSpeed);
+        flee.sub(this.vel);
+        flee.limit(this.maxForce * 2);
+        this.applyForce(flee);
+      }
+    }
+  }
+
+  align(boids) {
+    let perception = 50;
+    let steering = createVector();
+    let total = 0;
+
+    for (let other of boids) {
+      let d = p5.Vector.dist(this.pos, other.pos);
+      if (other != this && d < perception) {
+        steering.add(other.vel);
+        total++;
+      }
+    }
+
+    if (total > 0) {
+      steering.div(total);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.vel);
+      steering.limit(this.maxForce);
+    }
+
+    return steering;
+  }
+
+  cohesion(boids) {
+    let perception = 50;
+    let steering = createVector();
+    let total = 0;
+
+    for (let other of boids) {
+      let d = p5.Vector.dist(this.pos, other.pos);
+      if (other != this && d < perception) {
+        steering.add(other.pos);
+        total++;
+      }
+    }
+
+    if (total > 0) {
+      steering.div(total);
+      steering.sub(this.pos);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.vel);
+      steering.limit(this.maxForce);
+    }
+
+    return steering;
+  }
+
+  separation(boids) {
+    let perception = 30;
+    let steering = createVector();
+    let total = 0;
+
+    for (let other of boids) {
+      let d = p5.Vector.dist(this.pos, other.pos);
+      if (other != this && d < perception) {
+        let diff = p5.Vector.sub(this.pos, other.pos);
+        diff.div(d * d);
+        steering.add(diff);
+        total++;
+      }
+    }
+
+    if (total > 0) {
+      steering.div(total);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.vel);
+      steering.limit(this.maxForce);
+    }
+
+    return steering;
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+  }
+
+  edges() {
+    if (this.pos.x > width) this.pos.x = 0;
+    if (this.pos.x < 0) this.pos.x = width;
+    if (this.pos.y > height) this.pos.y = 0;
+    if (this.pos.y < 0) this.pos.y = height;
+  }
+
+  show() {
+    noStroke();
+    fill(this.color);
+    circle(this.pos.x, this.pos.y, this.size);
+  }
+}
+
+// ================== PREDATOR ==================
+
+class Predator {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = createVector();
+    this.acc = createVector();
+    this.maxSpeed = 4.5;
+    this.maxForce = 0.3;
+  }
+
+  update() {
+    let target = createVector(mouseX, mouseY);
+    let desired = p5.Vector.sub(target, this.pos);
+    desired.setMag(this.maxSpeed);
+
+    let steer = p5.Vector.sub(desired, this.vel);
+    steer.limit(this.maxForce);
+
+    this.acc.add(steer);
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+  }
+
+  show() {
+    fill(255, 50, 50);
+    noStroke();
+    circle(this.pos.x, this.pos.y, 26);
+  }
+}
+```
+
+- Un enlace al proyecto en el editor de p5.js.
+
+(Reflect Unidad 2 Actividad 10 - simulación FGT)[https://editor.p5js.org/felipegtupb/sketches/xn1iMe15d]
+
+- Selecciona capturas de pantalla representativas de tu pieza de arte generativa.
+
+<img width="893" height="752" alt="image" src="https://github.com/user-attachments/assets/3dffb2f5-e160-4376-b2f5-8a112366f025" />
+<img width="892" height="751" alt="image" src="https://github.com/user-attachments/assets/4d36ba51-dc8b-4052-8e70-2046a32fa792" />
