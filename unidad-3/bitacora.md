@@ -16,3 +16,4 @@ La forma en que esta lectura me abre la mente es que en realidad muchos de los c
 
 ## Bitácora de reflexión
 
+
