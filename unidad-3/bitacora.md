@@ -10,10 +10,19 @@ Inicialmente, ví a la IA como simplemente una herramienta que podria resolver m
 
 La forma en que esta lectura me abre la mente es que en realidad muchos de los componentes de nuestros programas podrian no siempre ser arbitrarios, podriamos scarle mayor partido a cada uno de elos si tratamos de modificarlos y significarlos de forma creativa, Definitivamente lo que me parece más intersesante es el hecho de que nos podemos inventar nuestras propias fuerzas, a pesar de que esté basado en fundamentos tan teóricos.
 
+### Actividad 3
+
+[**Fricción**](https://editor.p5js.org/felipegtupb/sketches/0lZpjUMeA)
+
+[**Dinamica de fluidos**](https://editor.p5js.org/felipegtupb/sketches/IrLAudgiR)
+
+[**Atracción gravitacional**](https://editor.p5js.org/felipegtupb/sketches/s4TlrZG24)
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
 
