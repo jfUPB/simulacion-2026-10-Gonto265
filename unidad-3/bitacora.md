@@ -22,10 +22,7 @@ La forma en que esta lectura me abre la mente es que en realidad muchos de los c
 
 La obra representa dinámicas migratorias en un territorio abstracto.
 
-Las cajas representan individuos en desplazamiento.
-El espacio no es neutro: contiene fuerzas invisibles que moldean sus trayectorias.
-
-Existen:
+Los agentes representan individuos en desplazamiento, hay:
 
 Zonas de atracción (oportunidad, estabilidad).
 
@@ -36,8 +33,7 @@ Zonas densas (fricción social o burocrática).
 La historia no está escrita:
 emerge de las trayectorias.
 
-El usuario no observa el fenómeno:
-lo altera.
+El usuario no observa el fenómeno, lo altera.
 
 ```js
 let agents = [];
@@ -225,8 +221,8 @@ function socialAttraction(particles) {
 
 <img width="902" height="668" alt="image" src="https://github.com/user-attachments/assets/a961c3ca-5610-449c-9d73-427d4bea6cc6" />
 
-
 ## Bitácora de reflexión
+
 
 
 
