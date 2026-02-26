@@ -20,9 +20,177 @@ La forma en que esta lectura me abre la mente es que en realidad muchos de los c
 
 ## Bitácora de aplicación 
 
+La obra representa dinámicas migratorias en un territorio abstracto.
+
+Las cajas representan individuos en desplazamiento.
+El espacio no es neutro: contiene fuerzas invisibles que moldean sus trayectorias.
+
+Existen:
+
+Zonas de atracción (oportunidad, estabilidad).
+
+Zonas de repulsión (conflicto, exclusión).
+
+Zonas densas (fricción social o burocrática).
+
+La historia no está escrita:
+emerge de las trayectorias.
+
+El usuario no observa el fenómeno:
+lo altera.
+
+```js
+let agents = [];
+let attractors = [];
+let repellers = [];
+let fluidOn = false;
+
+function setup() {
+  createCanvas(900, 600);
+}
+
+function draw() {
+  background(10);
+
+  // Spawn continuo
+  if (frameCount % 20 === 0) {
+    agents.push(new Agent(random(width), random(-50, 0)));
+  }
+
+  for (let a of agents) {
+
+    let gravity = createVector(0, 0.1);
+    a.applyForce(gravity);
+
+    for (let att of attractors) {
+      a.applyForce(att.attract(a));
+      att.show();
+    }
+
+    for (let rep of repellers) {
+      a.applyForce(rep.repel(a));
+      rep.show();
+    }
+
+    if (fluidOn && a.position.y > height / 2) {
+      a.applyDrag(0.05);
+    }
+
+    a.update();
+    a.show();
+  }
+
+  if (fluidOn) {
+    fill(0, 80, 150, 80);
+    rect(0, 0, width, height);
+  }
+}
+
+class Agent {
+
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(random(-1, 1), 0);
+    this.acceleration = createVector(0, 0);
+    this.mass = random(0.8, 1.5);
+    this.size = 6;
+  }
+
+  applyForce(force) {
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  applyDrag(c) {
+    let drag = this.velocity.copy();
+    drag.mult(-1);
+    drag.normalize();
+    drag.mult(c * this.velocity.mag());
+    this.applyForce(drag);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    fill(random(255),random(255),random(255), 180);
+    noStroke();
+    circle(this.position.x, this.position.y, this.size);
+  }
+}
+
+class Attractor {
+
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.power = 500;
+  }
+
+  attract(agent) {
+    let force = p5.Vector.sub(this.position, agent.position);
+    let d = constrain(force.mag(), 20, 200);
+    force.normalize();
+    force.mult(this.power / d);
+    return force;
+  }
+
+  show() {
+    fill(0, 255, 0);
+    circle(this.position.x, this.position.y, 15);
+  }
+}
+
+class Repeller {
+
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.power = 300;
+  }
+
+  repel(agent) {
+    let force = p5.Vector.sub(agent.position, this.position);
+    let d = constrain(force.mag(), 20, 200);
+    force.normalize();
+    force.mult(this.power / d);
+    return force;
+  }
+
+  show() {
+    fill(255, 0, 0);
+    circle(this.position.x, this.position.y, 15);
+  }
+}
+
+function mousePressed() {
+
+  if (mouseButton === LEFT) {
+    attractors.push(new Attractor(mouseX, mouseY));
+  }
+
+  if (mouseButton === RIGHT) {
+    repellers.push(new Repeller(mouseX, mouseY));
+  }
+}
+
+function keyPressed() {
+  if (key === 'd' || key === 'D') {
+    fluidOn = !fluidOn;
+  }
+}
+```
+
+[Actividad 4 - simulación FGT](https://editor.p5js.org/felipegtupb/sketches/_rxCK8KMB)
+
+<img width="914" height="673" alt="image" src="https://github.com/user-attachments/assets/f55b2c5a-76f6-4a95-8a95-a3c877dc60d5" />
+
+<img width="902" height="668" alt="image" src="https://github.com/user-attachments/assets/a961c3ca-5610-449c-9d73-427d4bea6cc6" />
 
 
 ## Bitácora de reflexión
+
 
 
 
