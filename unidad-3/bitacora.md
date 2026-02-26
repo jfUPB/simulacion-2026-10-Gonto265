@@ -75,6 +75,8 @@ function draw() {
     if (fluidOn && a.position.y > height / 2) {
       a.applyDrag(0.05);
     }
+    
+    socialAttraction(agents);
 
     a.update();
     a.show();
@@ -84,6 +86,8 @@ function draw() {
     fill(0, 80, 150, 80);
     rect(0, 0, width, height);
   }
+
+
 }
 
 class Agent {
@@ -110,10 +114,13 @@ class Agent {
   }
 
   update() {
-    this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
-    this.acceleration.mult(0);
-  }
+  this.velocity.add(this.acceleration);
+
+  this.velocity.limit(15);
+
+  this.position.add(this.velocity);
+  this.acceleration.mult(0);
+}
 
   show() {
     fill(random(255),random(255),random(255), 180);
@@ -126,7 +133,7 @@ class Attractor {
 
   constructor(x, y) {
     this.position = createVector(x, y);
-    this.power = 500;
+    this.power = 50;
   }
 
   attract(agent) {
@@ -139,7 +146,7 @@ class Attractor {
 
   show() {
     fill(0, 255, 0);
-    circle(this.position.x, this.position.y, 15);
+    circle(this.position.x, this.position.y, 5);
   }
 }
 
@@ -147,7 +154,7 @@ class Repeller {
 
   constructor(x, y) {
     this.position = createVector(x, y);
-    this.power = 300;
+    this.power = 100;
   }
 
   repel(agent) {
@@ -160,7 +167,7 @@ class Repeller {
 
   show() {
     fill(255, 0, 0);
-    circle(this.position.x, this.position.y, 15);
+    circle(this.position.x, this.position.y, 5);
   }
 }
 
@@ -180,6 +187,36 @@ function keyPressed() {
     fluidOn = !fluidOn;
   }
 }
+
+function socialAttraction(particles) {
+
+  let perceptionRadius = 60;
+
+  for (let i = 0; i < particles.length; i++) {
+
+    for (let j = i + 1; j < particles.length; j++) {
+
+      let p1 = particles[i];
+      let p2 = particles[j];
+
+      let dir = p5.Vector.sub(p2.position, p1.position);
+      let d = dir.mag();
+
+      if (d > 5 && d < perceptionRadius) {
+
+        dir.normalize();
+
+        let strength = 0.03 * (1 - d / perceptionRadius);
+
+        let force = dir.copy().mult(strength);
+
+        p1.applyForce(force);
+        p2.applyForce(force.copy().mult(-1)); 
+        // fuerza opuesta para equilibrio
+      }
+    }
+  }
+}
 ```
 
 [Actividad 4 - simulación FGT](https://editor.p5js.org/felipegtupb/sketches/_rxCK8KMB)
@@ -190,6 +227,7 @@ function keyPressed() {
 
 
 ## Bitácora de reflexión
+
 
 
 
