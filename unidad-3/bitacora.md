@@ -223,9 +223,121 @@ function socialAttraction(particles) {
 
 ## Bitácora de reflexión
 
+- Explica detalladamente en tu bitácora ¿Qué es el marco de movimiento motion 101 y cómo se relacionan: fuerza, aceleración, velocidad y posición?
 
+El marco de movimiento 101 es la forma básica en que se puede simular el movimiento de las masas, esto a partir de los distintos elementos que componen la fisica mecanica, como la velocidad, la aceleración, la posición, y las fuerzas. La forma en que estas se relacionan estos es que son derivados  o componentos de cada uno, es decir, la velocidad es derivada de  la posición, la aceleración es la suma de las fuerzas dividida por la masa, etc.
 
+- Vas a analizar este video sobre el artista Alexander Calder. Selecciona una de sus obras y luego crea una obra generativa inspirada en la obra de Calder que seleccionaste y el marco de movimiento motion 101 con fuerzas que trabajamos en esta unidad.
 
+[Actividad 5 - simulación FGT](https://editor.p5js.org/felipegtupb/sketches/vKx08CHzT)
 
+```js
+let nodes = [];
+let num = 12;
 
+function setup() {
+  createCanvas(900, 600);
 
+  for (let i = 0; i < num; i++) {
+    nodes.push(new Node(
+      random(width * 0.2, width * 0.8),
+      random(height * 0.3, height * 0.7)
+    ));
+  }
+}
+
+function draw() {
+  background(245);
+
+  // Dibujar conexiones tipo estructura móvil
+  drawConnections();
+
+  for (let n of nodes) {
+    n.applyForce(createVector(0, 0.03)); // gravedad más suave
+    n.springToAnchor();                 // fuerza elástica equilibrada
+    n.applyDrag(0.02);                  // fricción del aire
+    n.update();
+    n.show();
+  }
+}
+
+function drawConnections() {
+  stroke(0);
+  strokeWeight(2);
+  noFill();
+
+  beginShape();
+  for (let n of nodes) {
+    curveVertex(n.position.x, n.position.y);
+  }
+  endShape();
+}
+
+class Node {
+
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(random(-0.5, 0.5), random(-0.5, 0.5));
+    this.acceleration = createVector(0, 0);
+    this.mass = random(1, 3);
+    this.size = random(50, 110);
+
+    // Anchor cercano para evitar que suban al techo
+    this.anchor = createVector(
+      x + random(-120, 120),
+      y + random(-80, 80)
+    );
+
+    // Color fijo (no cambia cada frame)
+    this.col = random([
+      color(220, 40, 40),   // rojo
+      color(30, 70, 200),   // azul
+      color(240, 220, 50)   // amarillo
+    ]);
+  }
+
+  applyForce(force) {
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  applyDrag(c) {
+    let drag = this.velocity.copy();
+    drag.mult(-1);
+    drag.normalize();
+    drag.mult(c * this.velocity.magSq());
+    this.applyForce(drag);
+  }
+
+  springToAnchor() {
+    let force = p5.Vector.sub(this.anchor, this.position);
+    let k = 0.02; // constante elástica más fuerte
+    force.mult(k);
+    this.applyForce(force);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(3); // límite de velocidad estable
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    noStroke();
+    fill(this.col);
+    ellipse(this.position.x, this.position.y, this.size);
+  }
+}
+
+function mousePressed() {
+  // Interacción: el usuario altera el equilibrio
+  for (let n of nodes) {
+    let force = p5.Vector.sub(createVector(mouseX, mouseY), n.position);
+    force.setMag(300);
+    n.applyForce(force);
+  }
+}
+```
+
+<img width="915" height="672" alt="image" src="https://github.com/user-attachments/assets/d906cffa-46df-45c5-b82d-00f1286f9019" />
