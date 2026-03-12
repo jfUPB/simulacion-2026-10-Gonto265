@@ -693,6 +693,6 @@ function mousePressed() {
 
 ## Bitácora de reflexión
 
+<img width="6812" height="1451" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/8d5235c3-8287-4756-946b-f8bbd1d2ea06" />
 
-
-
+Esto lo podría aplicar como lider de diseño de proyectos creativos, pues en conjunto conjunto con las habilidades creativas que puedo mejorar, sin duda tener bases de desarrollo y simulación física puedo alcanzar una capacidad de gestión mucho mayor.
