@@ -180,9 +180,7 @@ function mouseReleased() {
 
 ### Actividad 5
 
-r es la distancia al origen.
-
-theta es el ángulo de rotación, `p5.Vector.fromAngle(theta,r)` convierte las coordenadas polares a cartesianas:
+r es la distancia al origen y theta es el ángulo de rotación, `p5.Vector.fromAngle(theta,r)` convierte las coordenadas polares a cartesianas:
 
 ```js
 x = r*cos(theta)
@@ -191,9 +189,69 @@ y = r*sin(theta)
 
 Gracias a esto se puede dibujar un punto que gira y cambia su distancia al centro.
 
+Luego aparece `let v = p5.Vector.fromAngle(theta)`. La función crea un vector unitario en la dirección del ángulo.
+
+Eso significa que `v.x = cos(theta)` y `v.y = sin(theta)`, es decir que `radio = 1`.
+
+Luego, El punto, mantiene una distancia constante r y cambia continuamente su ángulo. Esto produce un movimiento circular uniforme alrededor del centro.
+
+### Actividad 6
+
+```js
+let amplitude = 80;
+let angularVelocity = 0.05;
+let phase = 0;
+
+let theta = 0;
+
+function setup() {
+  createCanvas(640, 240);
+}
+
+function draw() {
+  background(20);
+
+  translate(width/2, height/2);
+
+  for(let i = -5; i <= 5; i++){
+
+    let localPhase = phase + i * 0.4;
+
+    let x = amplitude * sin(theta + localPhase);
+    let y = i * 20;
+
+    noStroke();
+    fill(255, 220, 100, 200);
+    circle(x, y, 18);
+
+    stroke(255, 120);
+    line(0, y, x, y);
+  }
+
+  theta += angularVelocity;
+}
+
+function keyPressed(){
+
+// amplitud
+if(key === 'a'){ amplitude += 10; }
+if(key === 'z'){ amplitude -= 10; }
+
+// velocidad angular
+if(key === 's'){ angularVelocity += 0.01; }
+if(key === 'x'){ angularVelocity -= 0.01; }
+
+// fase
+if(key === 'd'){ phase += 0.2; }
+if(key === 'c'){ phase -= 0.2; }
+
+}
+```
+
 ## Bitácora de aplicación 
 
 
 
 ## Bitácora de reflexión
+
 
