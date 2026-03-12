@@ -687,7 +687,7 @@ function mousePressed() {
 }
 ```
 
-[Alpha Centauri v1](https://editor.p5js.org/felipegtupb/sketches/S9lqQhmsM)
+[Caos - Alpha Centauri v1](https://editor.p5js.org/felipegtupb/sketches/S9lqQhmsM)
 
 <img width="915" height="790" alt="image" src="https://github.com/user-attachments/assets/2b9859b3-0890-427a-94ba-3629703e8411" />
 
@@ -696,3 +696,4 @@ function mousePressed() {
 <img width="6812" height="1451" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/8d5235c3-8287-4756-946b-f8bbd1d2ea06" />
 
 Esto lo podría aplicar como lider de diseño de proyectos creativos, pues en conjunto conjunto con las habilidades creativas que puedo mejorar, sin duda tener bases de desarrollo y simulación física puedo alcanzar una capacidad de gestión mucho mayor.
+
