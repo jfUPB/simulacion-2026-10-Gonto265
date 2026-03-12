@@ -250,8 +250,108 @@ if(key === 'c'){ phase -= 0.2; }
 
 ## Bitácora de aplicación 
 
+- Describe el concepto de tu obra generativa. Recuerda que desde la unidad anterior añadimos la idea de narrativa a la obra generativa, para guiar algunas de las decisiones en la definición de reglas del sistema generativo. PERO OJO, no estamos contando una historia, estamos usando la narrativa como herramienta de diseño para la definición de reglas.
 
+Este programa está inspirado en proyecto actual llamado Alpha Centauri, donde éste programa busca simular un creador y regente del universo.
+
+```js
+let particles = [];
+let stars = [];
+let t = 0;
+
+class Particle {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.offset = random(1000);
+    this.size = random(2,6);
+    this.color = color(random(150,255), random(100,200), random(200,255));
+  }
+
+  update() {
+    let amp = map(mouseY, 0, height, 20, 150);
+    let freq = map(mouseX, 0, width, 0.01, 0.08);
+
+    let wave = sin(t + this.offset) * amp;
+
+    let nx = noise(this.offset, t) * width;
+    let ny = height/2 + wave;
+
+    this.pos.x = lerp(this.pos.x, nx, 0.02);
+    this.pos.y = lerp(this.pos.y, ny, 0.05);
+  }
+
+  display() {
+    noStroke();
+    fill(this.color);
+    ellipse(this.pos.x, this.pos.y, this.size);
+  }
+}
+
+class Star {
+  constructor() {
+    this.x = random(width);
+    this.y = random(height);
+    this.size = random(1,3);
+  }
+
+  display() {
+    fill(255);
+    noStroke();
+    ellipse(this.x, this.y, this.size);
+  }
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+
+  // partículas cósmicas
+  for (let i = 0; i < 120; i++) {
+    particles.push(new Particle(random(width), random(height)));
+  }
+
+  // estrellas de fondo
+  for (let i = 0; i < 300; i++) {
+    stars.push(new Star());
+  }
+}
+
+function draw() {
+
+  // fondo con transparencia para efecto de movimiento
+  background(5, 5, 20, 40);
+
+  // dibujar estrellas
+  for (let s of stars) {
+    s.display();
+  }
+
+  // nebulosa suave
+  noStroke();
+  fill(120, 60, 200, 20);
+  ellipse(width/2, height/2, 500);
+
+  fill(50, 100, 255, 20);
+  ellipse(mouseX, mouseY, 400);
+
+  // partículas espaciales
+  for (let p of particles) {
+    p.update();
+    p.display();
+  }
+
+  t += 0.03;
+}
+
+function mousePressed() {
+  particles.push(new Particle(mouseX, mouseY));
+}
+```
+
+[Alpha Centauri](https://editor.p5js.org/felipegtupb/sketches/S9lqQhmsM)
+
+<img width="915" height="790" alt="image" src="https://github.com/user-attachments/assets/2b9859b3-0890-427a-94ba-3629703e8411" />
 
 ## Bitácora de reflexión
+
 
 
