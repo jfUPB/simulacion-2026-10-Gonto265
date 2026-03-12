@@ -248,6 +248,346 @@ if(key === 'c'){ phase -= 0.2; }
 }
 ```
 
+### Actividad 7
+
+```js
+let oscillators = [];
+let stars = [];
+let t = 0;
+
+function setup() {
+  createCanvas(640, 360);
+
+  // Osciladores
+  for (let i = 0; i < 12; i++) {
+    oscillators.push(new Oscillator());
+  }
+
+  // Estrellas de fondo
+  for (let i = 0; i < 150; i++) {
+    stars.push(createVector(random(width), random(height)));
+  }
+}
+
+function draw() {
+
+  background(10,10,25,60);
+
+  // Dibujar estrellas
+  noStroke();
+  fill(255);
+  for (let s of stars){
+    circle(s.x,s.y,2);
+  }
+
+  // Ejecutar osciladores
+  for (let o of oscillators) {
+    o.applyForce();
+    o.update();
+    o.show();
+  }
+
+  t += 0.01;
+}
+
+class Oscillator {
+
+  constructor() {
+    this.angle = createVector(random(TWO_PI), random(TWO_PI));
+
+    this.angleVelocity = createVector(
+      random(-0.04,0.04),
+      random(-0.04,0.04)
+    );
+
+    this.amplitude = createVector(
+      random(40,width/2),
+      random(40,height/2)
+    );
+
+    this.mass = random(1,3);
+
+    this.color = color(
+      random(150,255),
+      random(100,200),
+      random(200,255)
+    );
+  }
+
+  applyForce(){
+
+    // Fuerza gravitacional hacia el mouse
+    let mouse = createVector(mouseX - width/2, mouseY - height/2);
+
+    let position = createVector(
+      sin(this.angle.x) * this.amplitude.x,
+      sin(this.angle.y) * this.amplitude.y
+    );
+
+    let force = p5.Vector.sub(mouse, position);
+
+    let distance = constrain(force.mag(),20,200);
+
+    let strength = (0.5 * this.mass) / (distance * distance);
+
+    force.setMag(strength);
+
+    this.angleVelocity.add(force);
+  }
+
+  update() {
+
+    // Ruido Perlin modifica suavemente la velocidad
+    let n = noise(t + this.mass);
+
+    this.angleVelocity.x += map(n,0,1,-0.002,0.002);
+    this.angleVelocity.y += map(n,0,1,-0.002,0.002);
+
+    this.angle.add(this.angleVelocity);
+  }
+
+  show() {
+
+    let x = sin(this.angle.x) * this.amplitude.x;
+    let y = sin(this.angle.y) * this.amplitude.y;
+
+    push();
+    translate(width/2,height/2);
+
+    stroke(this.color);
+    strokeWeight(1);
+
+    line(0,0,x,y);
+
+    noStroke();
+    fill(this.color);
+    circle(x,y,12);
+
+    pop();
+  }
+}
+```
+
+### Actividad 8
+
+```js
+let angle = 0;
+let angleVelocity = 0.2;
+let amplitude = 100;
+
+function setup() {
+  createCanvas(640, 240);
+}
+
+function draw() {
+  background(255);
+
+  stroke(0);
+  strokeWeight(2);
+  fill(127,127);
+
+  let a = angle;
+
+  for (let x = 0; x <= width; x += 24) {
+
+    let y = amplitude * sin(a);
+
+    circle(x, y + height/2, 48);
+
+    a += angleVelocity;
+  }
+
+  // mueve la onda
+  angle += 0.05;
+}
+```
+
+### Actividad 9
+
+```js
+let bob1;
+let bob2;
+
+let spring1;
+let spring2;
+
+function setup() {
+  createCanvas(640, 240);
+
+  // resortes
+  spring1 = new Spring(width / 2, 10, 80);
+  spring2 = new Spring(width / 2, 100, 80);
+
+  // masas
+  bob1 = new Bob(width / 2, 100);
+  bob2 = new Bob(width / 2, 180);
+}
+
+function draw() {
+  background(255);
+
+  let gravity = createVector(0, 0.5);
+
+  bob1.applyForce(gravity);
+  bob2.applyForce(gravity);
+
+  bob1.update();
+  bob2.update();
+
+  // conectar primer resorte al bob1
+  spring1.connect(bob1);
+
+  // el segundo resorte usa bob1 como ancla
+  spring2.anchor = bob1.position;
+  spring2.connect(bob2);
+
+  spring1.showLine(bob1);
+  spring2.showLine(bob2);
+
+  bob1.show();
+  bob2.show();
+
+  spring1.show();
+}
+
+class Spring {
+
+  constructor(x, y, length) {
+    this.anchor = createVector(x, y);
+    this.restLength = length;
+    this.k = 0.2;
+  }
+
+  connect(bob) {
+
+    let force = p5.Vector.sub(bob.position, this.anchor);
+
+    let currentLength = force.mag();
+
+    let stretch = currentLength - this.restLength;
+
+    force.setMag(-1 * this.k * stretch);
+
+    bob.applyForce(force);
+  }
+
+  show() {
+    fill(127);
+    circle(this.anchor.x, this.anchor.y, 10);
+  }
+
+  showLine(bob) {
+    stroke(0);
+    line(bob.position.x, bob.position.y, this.anchor.x, this.anchor.y);
+  }
+}
+
+class Bob {
+
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.velocity = createVector();
+    this.acceleration = createVector();
+    this.mass = 1;
+  }
+
+  applyForce(force) {
+    let f = p5.Vector.div(force, this.mass);
+    this.acceleration.add(f);
+  }
+
+  update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+  }
+
+  show() {
+    stroke(0);
+    fill(175);
+    circle(this.position.x, this.position.y, 32);
+  }
+}
+```
+
+### Actividad 10
+
+```js
+let pendulum;
+
+function setup() {
+  createCanvas(640, 240);
+  pendulum = new DoublePendulum(width/2,0,120,120);
+}
+
+function draw() {
+  background(255);
+
+  pendulum.update();
+  pendulum.show();
+}
+
+class DoublePendulum {
+
+  constructor(x,y,r1,r2){
+
+    this.pivot = createVector(x,y);
+
+    this.r1 = r1;
+    this.r2 = r2;
+
+    this.angle1 = PI/4;
+    this.angle2 = PI/6;
+
+    this.aVel1 = 0;
+    this.aVel2 = 0;
+
+    this.aAcc1 = 0;
+    this.aAcc2 = 0;
+
+    this.damping = 0.999;
+
+    this.ballr = 16;
+  }
+
+  update(){
+
+    let g = 0.4;
+
+    this.aAcc1 = (-g/this.r1) * sin(this.angle1);
+    this.aAcc2 = (-g/this.r2) * sin(this.angle2);
+
+    this.aVel1 += this.aAcc1;
+    this.aVel2 += this.aAcc2;
+
+    this.angle1 += this.aVel1;
+    this.angle2 += this.aVel2;
+
+    this.aVel1 *= this.damping;
+    this.aVel2 *= this.damping;
+  }
+
+  show(){
+
+    let x1 = this.pivot.x + this.r1 * sin(this.angle1);
+    let y1 = this.pivot.y + this.r1 * cos(this.angle1);
+
+    let x2 = x1 + this.r2 * sin(this.angle2);
+    let y2 = y1 + this.r2 * cos(this.angle2);
+
+    stroke(0);
+    strokeWeight(2);
+
+    line(this.pivot.x,this.pivot.y,x1,y1);
+    circle(x1,y1,this.ballr*2);
+
+    line(x1,y1,x2,y2);
+    circle(x2,y2,this.ballr*2);
+  }
+
+}
+```
+
 ## Bitácora de aplicación 
 
 - Describe el concepto de tu obra generativa. Recuerda que desde la unidad anterior añadimos la idea de narrativa a la obra generativa, para guiar algunas de las decisiones en la definición de reglas del sistema generativo. PERO OJO, no estamos contando una historia, estamos usando la narrativa como herramienta de diseño para la definición de reglas.
@@ -347,11 +687,12 @@ function mousePressed() {
 }
 ```
 
-[Alpha Centauri](https://editor.p5js.org/felipegtupb/sketches/S9lqQhmsM)
+[Alpha Centauri v1](https://editor.p5js.org/felipegtupb/sketches/S9lqQhmsM)
 
 <img width="915" height="790" alt="image" src="https://github.com/user-attachments/assets/2b9859b3-0890-427a-94ba-3629703e8411" />
 
 ## Bitácora de reflexión
+
 
 
 
