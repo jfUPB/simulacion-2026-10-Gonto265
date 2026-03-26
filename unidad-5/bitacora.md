@@ -117,6 +117,12 @@ Se modificó únicamente la visualización cambiando la forma de las partículas
 
 ## Bitácora de aplicación 
 
+#### [Así de efímeras son las ideas](https://editor.p5js.org/felipegtupb/sketches/l8G9w-h0p)
+
+Este proyecto busca reflejar una situación a la que se enfrentan las personas diariamente. Diariamente se producen toneladas de ideas las cuales nacen siendo brillantes, ingeniosas y con gran potencial. Sin embargo, a medida que pasa el tiempo estas suelen olvidarse, se dejan a un lado o no se tiene la suficiente motivación, capacidad mental o esperanza, por lo que estas se opacan hasta desaparecer sin rastro de su existencia.
+
+En el momento en que se toma acción y se lleva a la práctica una idea, esta trasciende y es capaz de modificar nuestra vida, el entorno y a las demás personas en la medida en que la voluntad lo permita.
+
 ```js
 /**
  * UNIDAD 5: Sistema de Partículas
@@ -335,5 +341,10 @@ function drawMouseGlow() {
   }
 }
 ```
+
+<img width="916" height="789" alt="image" src="https://github.com/user-attachments/assets/d486982a-c831-485e-a3a7-9ee98401191c" />
+
+<img width="916" height="790" alt="image" src="https://github.com/user-attachments/assets/7c559048-7856-4023-b7ce-2a27db628255" />
+
 
 ## Bitácora de reflexión
