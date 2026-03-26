@@ -117,5 +117,159 @@ Se modificó únicamente la visualización cambiando la forma de las partículas
 
 ## Bitácora de aplicación 
 
+```js
+/**
+ * UNIDAD 5: Sistema de Partículas
+ * Proyecto: "Así de efímeras son las ideas"
+ * 
+ * Concepto: Luces difuminadas que nacen brillantes y mueren grises.
+ * La intervención humana (clic) las expande y las hace trascender.
+ */
+
+let sistema;
+let bgPulse = 0; // Intensidad del brillo de fondo
+let colorPulso;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  sistema = new SistemaDeIdeas();
+  colorPulso = color(0, 100, 200); // Azul para el pulso
+  noCursor(); // Ocultamos el cursor para usar una luz propia
+}
+
+function draw() {
+  // Fondo oscuro con reacción al pulso
+  let r = map(bgPulse, 0, 255, 10, 20);
+  let g = map(bgPulse, 0, 255, 15, 40);
+  let b = map(bgPulse, 0, 255, 25, 80);
+  background(r, g, b);
+  
+  if (bgPulse > 0) bgPulse -= 2; // Desvanecimiento suave del pulso
+
+  // Generar una nueva idea cada cierto tiempo (movimiento limpio)
+  if (frameCount % 45 == 0) {
+    sistema.addIdea(random(width), random(height));
+  }
+
+  sistema.run();
+  
+  // Guía visual para el usuario (un pequeño resplandor en el mouse)
+  drawMouseGlow();
+}
+
+function mousePressed() {
+  sistema.checkClick(mouseX, mouseY);
+}
+
+// --- CLASE EMISORA ---
+class SistemaDeIdeas {
+  constructor() {
+    this.ideas = [];
+  }
+
+  addIdea(x, y) {
+    this.ideas.push(new Idea(x, y));
+  }
+
+  run() {
+    for (let i = this.ideas.length - 1; i >= 0; i--) {
+      let id = this.ideas[i];
+      id.update();
+      id.display();
+
+      if (id.isDead()) {
+        if (id.enriquecida) bgPulse = 180; // Activa el pulso de fondo
+        this.ideas.splice(i, 1);
+      }
+    }
+  }
+
+  checkClick(mx, my) {
+    for (let id of this.ideas) {
+      let d = dist(mx, my, id.pos.x, id.pos.y);
+      if (d < 60 && !id.enriquecida) {
+        id.enriquecer(); // Transforma la idea al hacer clic
+      }
+    }
+  }
+}
+
+// --- CLASE PARTÍCULA ---
+class Idea {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    // Movimiento suave y limpio
+    this.vel = createVector(random(-0.5, 0.5), random(-0.5, 0.5));
+    this.lifespan = 255;
+    this.baseSize = random(40, 70);
+    this.currentSize = this.baseSize;
+    
+    this.enriquecida = false;
+    
+    // Colores iniciales
+    this.cInicio = color(255, 230, 100); // Amarillo brillante
+    this.cFinal = color(100, 100, 100);  // Gris
+    this.cTrascendente = color(150, 230, 255); // Azul claro
+  }
+
+  update() {
+    this.pos.add(this.vel);
+    this.lifespan -= 0.8; // Desgaste lento
+
+    if (!this.enriquecida) {
+      // Comportamiento normal: se encoge y se vuelve gris
+      this.currentSize = map(this.lifespan, 255, 0, this.baseSize, 5);
+    } else {
+      // Comportamiento enriquecido: crece
+      this.currentSize += 0.5;
+      this.lifespan -= 1.2; // Muere un poco más rápido al ser tan intensa
+    }
+  }
+
+  enriquecer() {
+    this.enriquecida = true;
+    this.vel.mult(0.2); // Se vuelve más pausada y contemplativa
+  }
+
+  isDead() {
+    return this.lifespan < 0;
+  }
+
+  display() {
+    push();
+    noStroke();
+    
+    let col;
+    if (!this.enriquecida) {
+      // Mezcla de amarillo a gris según la vida
+      let amt = map(this.lifespan, 255, 0, 0, 1);
+      col = lerpColor(this.cInicio, this.cFinal, amt);
+    } else {
+      col = this.cTrascendente;
+    }
+
+    // Dibujo de la "Luz Difuminada" (capas de resplandor)
+    for (let i = 4; i > 0; i--) {
+      let p = i * 10;
+      let alpha = map(i, 4, 0, 0, this.lifespan / (this.enriquecida ? 1 : 2));
+      fill(red(col), green(col), blue(col), alpha);
+      ellipse(this.pos.x, this.pos.y, this.currentSize + p);
+    }
+    
+    // Núcleo más brillante
+    fill(red(col), green(col), blue(col), this.lifespan);
+    ellipse(this.pos.x, this.pos.y, this.currentSize * 0.3);
+    pop();
+  }
+}
+
+function drawMouseGlow() {
+  noStroke();
+  for(let i = 10; i > 0; i--) {
+    fill(255, 10 - i);
+    ellipse(mouseX, mouseY, i * 5);
+  }
+}
+```
 
 ## Bitácora de reflexión
