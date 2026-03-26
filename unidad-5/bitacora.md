@@ -120,40 +120,37 @@ Se modificó únicamente la visualización cambiando la forma de las partículas
 ```js
 /**
  * UNIDAD 5: Sistema de Partículas
- * Proyecto: "Así de efímeras son las ideas"
+ * Proyecto: "Así de efímeras son las ideas" - Versión Final Trascendental
  * 
- * Concepto: Luces difuminadas que nacen brillantes y mueren grises.
- * La intervención humana (clic) las expande y las hace trascender.
+ * Narrativa: Las ideas nacen amarillas, mueren grises. Si el usuario las
+ * toca, trascienden (azul) y dejan fragmentos coloridos que orbitan
+ * perpetuamente buscando nuevas ideas.
  */
 
 let sistema;
-let bgPulse = 0; // Intensidad del brillo de fondo
-let colorPulso;
+let bgPulse = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   sistema = new SistemaDeIdeas();
-  colorPulso = color(0, 100, 200); // Azul para el pulso
-  noCursor(); // Ocultamos el cursor para usar una luz propia
+  noCursor();
 }
 
 function draw() {
-  // Fondo oscuro con reacción al pulso
-  let r = map(bgPulse, 0, 255, 10, 20);
-  let g = map(bgPulse, 0, 255, 15, 40);
-  let b = map(bgPulse, 0, 255, 25, 80);
+  // Fondo reactivo
+  let r = map(bgPulse, 0, 255, 10, 30);
+  let g = map(bgPulse, 0, 255, 15, 35);
+  let b = map(bgPulse, 0, 255, 25, 60);
   background(r, g, b);
   
-  if (bgPulse > 0) bgPulse -= 2; // Desvanecimiento suave del pulso
+  if (bgPulse > 0) bgPulse -= 2;
 
-  // Generar una nueva idea cada cierto tiempo (movimiento limpio)
-  if (frameCount % 45 == 0) {
+  // Generación orgánica de ideas
+  if (frameCount % 60 == 0) {
     sistema.addIdea(random(width), random(height));
   }
 
   sistema.run();
-  
-  // Guía visual para el usuario (un pequeño resplandor en el mouse)
   drawMouseGlow();
 }
 
@@ -161,10 +158,11 @@ function mousePressed() {
   sistema.checkClick(mouseX, mouseY);
 }
 
-// --- CLASE EMISORA ---
+// --- CLASE EMISORA Y GESTORA ---
 class SistemaDeIdeas {
   constructor() {
     this.ideas = [];
+    this.fragmentos = []; // Partículas persistentes
   }
 
   addIdea(x, y) {
@@ -172,102 +170,168 @@ class SistemaDeIdeas {
   }
 
   run() {
+    // 1. Gestionar Ideas
     for (let i = this.ideas.length - 1; i >= 0; i--) {
       let id = this.ideas[i];
       id.update();
       id.display();
 
       if (id.isDead()) {
-        if (id.enriquecida) bgPulse = 180; // Activa el pulso de fondo
+        if (id.enriquecida) {
+          bgPulse = 150;
+          this.generarFragmentos(id.pos.x, id.pos.y);
+        }
         this.ideas.splice(i, 1);
       }
+    }
+
+    // 2. Gestionar Fragmentos (Herencia de comportamiento)
+    for (let j = this.fragmentos.length - 1; j >= 0; j--) {
+      let f = this.fragmentos[j];
+      f.buscarIdeas(this.ideas); // Atracción física
+      f.update();
+      f.display();
+      
+      // Gestión de memoria: los fragmentos duran mucho pero no son infinitos
+      if (f.isDead()) this.fragmentos.splice(j, 1);
+    }
+  }
+
+  generarFragmentos(x, y) {
+    // Colores complementarios al azul (naranjas, rojos, amarillos)
+    let colores = [
+      color(255, 80, 0),   // Naranja vibrante
+      color(255, 0, 100),  // Magenta
+      color(255, 200, 0),  // Oro
+      color(200, 255, 0)   // Lima
+    ];
+    for (let i = 0; i < 8; i++) {
+      let c = random(colores);
+      this.fragmentos.push(new Fragmento(x, y, c));
     }
   }
 
   checkClick(mx, my) {
     for (let id of this.ideas) {
-      let d = dist(mx, my, id.pos.x, id.pos.y);
-      if (d < 60 && !id.enriquecida) {
-        id.enriquecer(); // Transforma la idea al hacer clic
+      if (dist(mx, my, id.pos.x, id.pos.y) < 60 && !id.enriquecida) {
+        id.enriquecer();
       }
     }
   }
 }
 
-// --- CLASE PARTÍCULA ---
+// --- CLASE IDEA (Luz Difusa) ---
 class Idea {
   constructor(x, y) {
     this.pos = createVector(x, y);
-    // Movimiento suave y limpio
-    this.vel = createVector(random(-0.5, 0.5), random(-0.5, 0.5));
+    this.vel = p5.Vector.random2D().mult(0.5);
     this.lifespan = 255;
     this.baseSize = random(40, 70);
     this.currentSize = this.baseSize;
-    
     this.enriquecida = false;
-    
-    // Colores iniciales
-    this.cInicio = color(255, 230, 100); // Amarillo brillante
-    this.cFinal = color(100, 100, 100);  // Gris
-    this.cTrascendente = color(150, 230, 255); // Azul claro
+    this.cInicio = color(255, 230, 100);
+    this.cFinal = color(100, 100, 100);
+    this.cTrascendente = color(0, 200, 255);
   }
 
   update() {
     this.pos.add(this.vel);
-    this.lifespan -= 0.8; // Desgaste lento
-
+    this.lifespan -= 0.7;
     if (!this.enriquecida) {
-      // Comportamiento normal: se encoge y se vuelve gris
       this.currentSize = map(this.lifespan, 255, 0, this.baseSize, 5);
     } else {
-      // Comportamiento enriquecido: crece
-      this.currentSize += 0.5;
-      this.lifespan -= 1.2; // Muere un poco más rápido al ser tan intensa
+      this.currentSize += 0.4;
+      this.lifespan -= 1.0;
     }
   }
 
   enriquecer() {
     this.enriquecida = true;
-    this.vel.mult(0.2); // Se vuelve más pausada y contemplativa
+    this.vel.mult(0.2);
   }
 
-  isDead() {
-    return this.lifespan < 0;
+  isDead() { return this.lifespan < 0; }
+
+  display() {
+    push();
+    noStroke();
+    let col = this.enriquecida ? this.cTrascendente : lerpColor(this.cInicio, this.cFinal, map(this.lifespan, 255, 0, 0, 1));
+    
+    // Efecto Glow
+    for (let i = 3; i > 0; i--) {
+      fill(red(col), green(col), blue(col), this.lifespan / (i * 2));
+      ellipse(this.pos.x, this.pos.y, this.currentSize + i * 15);
+    }
+    fill(red(col), green(col), blue(col), this.lifespan);
+    ellipse(this.pos.x, this.pos.y, this.currentSize * 0.4);
+    pop();
+  }
+}
+
+// --- CLASE FRAGMENTO (Opacos y Persistentes) ---
+class Fragmento {
+  constructor(x, y, col) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.random2D().mult(random(1, 3));
+    this.acc = createVector(0, 0);
+    this.color = col;
+    this.lifespan = 800; // Duran mucho más tiempo
+    this.maxSpeed = 2;
+  }
+
+  applyForce(f) {
+    this.acc.add(f);
+  }
+
+  // Comportamiento de Atracción: busca la idea más cercana
+  buscarIdeas(ideas) {
+    if (ideas.length > 0) {
+      let masCercana = ideas[0];
+      let dMin = dist(this.pos.x, this.pos.y, masCercana.pos.x, masCercana.pos.y);
+      
+      for (let id of ideas) {
+        let d = dist(this.pos.x, this.pos.y, id.pos.x, id.pos.y);
+        if (d < dMin) {
+          dMin = d;
+          masCercana = id;
+        }
+      }
+
+      // Calcular fuerza de atracción
+      let atraccion = p5.Vector.sub(masCercana.pos, this.pos);
+      atraccion.setMag(0.05); // Fuerza suave
+      this.applyForce(atraccion);
+    }
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    this.lifespan -= 0.5; // Muerte muy lenta
+    
+    // Rebote suave en bordes
+    if (this.pos.x < 0 || this.pos.x > width) this.vel.x *= -1;
+    if (this.pos.y < 0 || this.pos.y > height) this.vel.y *= -1;
   }
 
   display() {
     push();
     noStroke();
-    
-    let col;
-    if (!this.enriquecida) {
-      // Mezcla de amarillo a gris según la vida
-      let amt = map(this.lifespan, 255, 0, 0, 1);
-      col = lerpColor(this.cInicio, this.cFinal, amt);
-    } else {
-      col = this.cTrascendente;
-    }
-
-    // Dibujo de la "Luz Difuminada" (capas de resplandor)
-    for (let i = 4; i > 0; i--) {
-      let p = i * 10;
-      let alpha = map(i, 4, 0, 0, this.lifespan / (this.enriquecida ? 1 : 2));
-      fill(red(col), green(col), blue(col), alpha);
-      ellipse(this.pos.x, this.pos.y, this.currentSize + p);
-    }
-    
-    // Núcleo más brillante
-    fill(red(col), green(col), blue(col), this.lifespan);
-    ellipse(this.pos.x, this.pos.y, this.currentSize * 0.3);
+    fill(red(this.color), green(this.color), blue(this.color), this.lifespan);
+    circle(this.pos.x, this.pos.y, 4); // Opacos y pequeños
     pop();
   }
+
+  isDead() { return this.lifespan < 0; }
 }
 
 function drawMouseGlow() {
   noStroke();
-  for(let i = 10; i > 0; i--) {
-    fill(255, 10 - i);
-    ellipse(mouseX, mouseY, i * 5);
+  for(let i = 8; i > 0; i--) {
+    fill(255, 8 - i);
+    ellipse(mouseX, mouseY, i * 4);
   }
 }
 ```
