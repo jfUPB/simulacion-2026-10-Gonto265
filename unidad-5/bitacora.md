@@ -346,5 +346,6 @@ function drawMouseGlow() {
 
 <img width="916" height="790" alt="image" src="https://github.com/user-attachments/assets/7c559048-7856-4023-b7ce-2a27db628255" />
 
+<img width="916" height="787" alt="image" src="https://github.com/user-attachments/assets/16446503-aa37-43e8-bae8-3f88f9d63099" />
 
 ## Bitácora de reflexión
