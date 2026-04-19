@@ -137,4 +137,5 @@ Para música contemplativa o melancólica usaría flow fields por su fluidez. Pa
 ## Bitácora de aplicación 
 
 
+
 ## Bitácora de reflexión
