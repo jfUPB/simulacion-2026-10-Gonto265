@@ -122,9 +122,382 @@ El audio afectaba directamente el comportamiento físico: a mayor volumen, mayor
 
 En la evaluación, funcionó bien la conexión entre audio y movimiento, ya que lograba una sensación de vida en la palabra. Sin embargo, no funcionó del todo la claridad semántica, porque el exceso de movimiento hacía que la palabra se volviera difícil de leer. Esto indica que debo equilibrar mejor la legibilidad con la expresividad para que el significado no se pierda.
 
-
 ## Bitácora de aplicación 
 
+Palabra elegida: Cohete
+
+Mi intención es significar gráficamente la Palabra Cohete, ya que al ponerla en Mayúsculas y en vertical, La letra E puede convertirse en los propulsores de un cohete real, la o en el ventanal y La otra E en alerones.
+
+La idea es que un cohete se encuentre se encuentre flotando en el espacio en gravedad 0 y que el usuario pueda controlar la velocidad del cohete por medio de su voz.
+
+**Referencias**
+
+<img width="735" height="1089" alt="space!🔭🪐☄️" src="https://github.com/user-attachments/assets/69896d49-8768-4485-b735-4e0a106948c7" />
+
+<img width="736" height="920" alt="descarga (5)" src="https://github.com/user-attachments/assets/217c6f32-70d8-4017-9fce-e5e4ccea4e3f" />
+
+<img width="735" height="490" alt="descarga (6)" src="https://github.com/user-attachments/assets/779dfc70-722d-4664-a19c-5928b4c14fcb" />
+
+**Bocetos**
+
+<img width="621" height="180" alt="1" src="https://github.com/user-attachments/assets/6988d5a7-4545-4122-b838-2ea8e78a28b3" />
+
+<img width="219" height="650" alt="2" src="https://github.com/user-attachments/assets/68787001-8f85-4254-89da-68a5e508c576" />
+
+<img width="389" height="708" alt="3" src="https://github.com/user-attachments/assets/5a8ebbb7-74b5-42e0-97de-6a093bfd8a13" />
+
+<img width="1317" height="823" alt="image" src="https://github.com/user-attachments/assets/91887984-3a59-4398-a1ef-2b9807ce660e" />
+
+<img width="1261" height="798" alt="image" src="https://github.com/user-attachments/assets/6551db9e-3678-4f1d-8833-fb1cad8cc396" />
+
+**Mapa de Decisiones**
+
+tipografía en mayúsculas y disposición vertical de la palabra “COHETE”: construcción de una silueta reconocible de cohete a partir de la palabra;
+
+estiramiento de la C en la parte superior: generación de una punta aerodinámica que sugiere dirección y avance;
+
+transformación de la O con una línea horizontal: representación de un ventanal que refuerza la lectura objetual del cohete;
+
+uso de las dos E como elementos estructurales: la E inferior funciona como propulsores y la E media como alerones, conectando forma tipográfica con partes mecánicas;
+
+deformación controlada de letras: adaptación de la tipografía para que pierda rigidez textual y gane lectura como objeto físico;
+
+integración de cuerpos compuestos en Matter.js: construcción del cohete como un solo cuerpo con múltiples formas que respetan la silueta de las letras;
+
+colisiones con límites del canvas: refuerzo de la sensación de objeto físico existente en un espacio, no solo representación gráfica;
+
+ausencia de gravedad (gravedad cercana a cero): simulación de flotación espacial coherente con la idea de cohete en el espacio;
+
+aplicación de fuerzas según amplitud de audio: traducción directa de la voz en aceleración, vinculando sonido con propulsión;
+
+generación de partículas en los propulsores: visualización del empuje mediante fuego que aparece únicamente cuando hay sonido;
+
+intensidad del fuego proporcional al volumen: correspondencia semántica entre fuerza sonora y potencia del motor;
+
+fondo azul oscuro con estrellas: construcción de atmósfera espacial y sensación de profundidad;
+
+animación inicial de rotación y transformación de la palabra: transición de palabra legible a objeto funcional, mostrando el proceso semántico;
+
+zoom out posterior a la transformación: cambio de escala que posiciona la pieza como escena espacial interactiva;
+
+interacción por micrófono (voz): uso del cuerpo del usuario como controlador performativo, alineado con la idea de propulsión;
+
+**Mapa de interpretación**
+
+inicio en silencio: el cohete permanece flotando sin impulso, con movimiento mínimo generado por inercia o pequeñas colisiones;
+
+activación por voz suave: el cohete comienza a desplazarse lentamente, generando una combustión leve en los propulsores;
+
+incremento de volumen: aumento progresivo de la velocidad y aparición de fuego más intenso, evidenciando mayor empuje;
+
+picos de sonido (gritos o golpes): aceleraciones bruscas que pueden provocar choques contra los límites del espacio;
+
+modulación de la voz: control fino de la trayectoria, permitiendo dirigir el movimiento mediante variaciones de intensidad;
+
+silencio repentino: corte inmediato de la propulsión, dejando al cohete desplazarse por inercia;
+
+uso del espacio del canvas: interacción con los bordes como límites físicos que rebotan el cohete, generando cambios de dirección;
+
+exploración performativa: el usuario experimenta con ritmos, intensidades y pausas para “pilotear” el cohete;
+
+lectura simbólica en vivo: la voz se interpreta como combustible o energía vital del cohete;
+
+construcción de narrativa: la interacción puede percibirse como despegue, navegación o pérdida de control dependiendo del uso del sonido;
+
+variación de energía en el tiempo: la pieza permite momentos de calma (flotación) y momentos de tensión (aceleración y choque);
+
+relación cuerpo-sistema: el usuario no presiona botones, sino que usa su voz como extensión directa del comportamiento del objeto;
+
+interpretación abierta: aunque el sistema responde físicamente, el significado se construye en la experiencia performativa del usuario.
+
+**Uso de IA**
+Inicialmente se plantea visualmente, interactividad y tecnicamente, luego se le dan las especificaciones de diseño por con el prompt de la imagen a continuación.
+
+<img width="1866" height="948" alt="image" src="https://github.com/user-attachments/assets/3661368e-edd1-4082-9961-ccd00fc56d9c" />
+
+A partir de esto y depués de 30 prompts, se dan correcciones y ajustes hasta quedar exactamente a lo propuesto.
+
+**Código Fuente**
+
+```js
+const { Engine, World, Bodies, Body } = Matter;
+let engine, world, rocketBody;
+let walls = [];
+
+let state = "START"; // START, IDLE, ROTATING, MORPHING, ZOOMING, FLIGHT
+let timer = 0;
+let morph = 0;
+let globalRotation = 0; 
+let camScale = 1.0;
+let targetZoom = 0.35; 
+
+let mic, volSmooth = 0;
+let stars = [];
+let particles = [];
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  engine = Engine.create();
+  world = engine.world;
+  world.gravity.y = 0; 
+
+  mic = new p5.AudioIn();
+  mic.start();
+}
+
+function initExperience() {
+  resizeCanvas(windowWidth, windowHeight);
+  
+  stars = [];
+  let starArea = 4000; 
+  for (let i = 0; i < 1000; i++) {
+    stars.push({ x: random(-starArea, starArea), y: random(-starArea, starArea), s: random(1, 3), o: random(80, 200) });
+  }
+
+  rocketBody = Bodies.rectangle(0, 0, 450, 80, {
+    frictionAir: 0.05,
+    restitution: 0.8,
+    density: 0.001
+  });
+
+  updateBoundaries();
+  state = "IDLE";
+}
+
+function updateBoundaries() {
+  World.remove(world, walls);
+  let t = 1000; 
+  let vW = (width / targetZoom) / 2;
+  let vH = (height / targetZoom) / 2;
+  walls = [
+    Bodies.rectangle(0, -vH - t/2, vW * 2, t, { isStatic: true }),
+    Bodies.rectangle(0, vH + t/2, vW * 2, t, { isStatic: true }),
+    Bodies.rectangle(-vW - t/2, 0, t, vH * 2, { isStatic: true }),
+    Bodies.rectangle(vW + t/2, 0, t, vH * 2, { isStatic: true })
+  ];
+  World.add(world, walls);
+}
+
+function mousePressed() {
+  if (state === "START") {
+    fullscreen(true);
+    userStartAudio();
+  }
+}
+
+function windowResized() {
+  if (state === "START") setTimeout(initExperience, 150);
+  else {
+    resizeCanvas(windowWidth, windowHeight);
+    updateBoundaries();
+  }
+}
+
+function draw() {
+  background(0); 
+  if (state === "START") return;
+
+  background(2, 4, 10);
+  
+  // Audio-reactividad: Suavizamos la entrada para una física fluida
+  let rawVol = mic.getLevel();
+  volSmooth = lerp(volSmooth, rawVol, 0.2); 
+
+  updateSequence();
+
+  push();
+  translate(width/2, height/2);
+  scale(camScale);
+  
+  drawStars();
+  handleParticles(); 
+
+  if (state === "FLIGHT") {
+    applyPhysics();
+    push();
+    translate(rocketBody.position.x, rocketBody.position.y);
+    rotate(rocketBody.angle); 
+    drawRocketDesign();
+    pop();
+  } else {
+    rotate(globalRotation);
+    drawRocketDesign();
+  }
+  pop();
+
+  Engine.update(engine);
+}
+
+function updateSequence() {
+  if (state === "IDLE") {
+    timer++;
+    if (timer > 40) state = "ROTATING";
+  }
+  if (state === "ROTATING") {
+    globalRotation = lerp(globalRotation, HALF_PI, 0.04);
+    if (abs(globalRotation - HALF_PI) < 0.01) { globalRotation = HALF_PI; state = "MORPHING"; }
+  }
+  if (state === "MORPHING") {
+    morph = lerp(morph, 1, 0.02);
+    if (morph > 0.99) state = "ZOOMING";
+  }
+  if (state === "ZOOMING") {
+    camScale = lerp(camScale, targetZoom, 0.02); 
+    if (abs(camScale - targetZoom) < 0.01) {
+      state = "FLIGHT";
+      World.add(world, rocketBody);
+      Body.setAngle(rocketBody, HALF_PI); 
+    }
+  }
+}
+
+function drawRocketDesign() {
+  let letters = ["C", "O", "H", "E", "T", "E"];
+  let spacing = 75; 
+  let cGap = lerp(0, 65, morph); 
+  
+  textAlign(CENTER, CENTER);
+  textStyle(BOLD);
+  textSize(95);
+  textFont('Arial');
+
+  for (let i = 0; i < letters.length; i++) {
+    let xPos = (i - 2.5) * spacing;
+    if (i === 0) xPos -= cGap; 
+
+    push();
+    translate(xPos, 0);
+    fill(255);
+    noStroke();
+
+    if (letters[i] === "C") {
+      scale(lerp(1, 3.2, morph), 1);
+      text("C", 0, 0);
+    } 
+    else if (letters[i] === "O") {
+      text("O", 0, 0);
+      if (morph > 0.5) {
+        stroke(255); strokeWeight(6);
+        line(20, 20, -20, -20);
+      }
+    } 
+    else if (letters[i] === "E" && i === 3) {
+      scale(1, lerp(1, 3.2, morph));
+      text("E", 0, 0);
+    } 
+    else if (letters[i] === "E" && i === 5) {
+      scale(lerp(1, 1.6, morph), 1.2);
+      text("E", 0, 0);
+      
+      // DISPARO DE FUEGO REACTIVO
+      if (state === "FLIGHT") {
+        if (volSmooth > 0.01 || keyIsDown(32) || keyIsDown(UP_ARROW)) {
+            // Si es por teclado, simulamos un volumen medio-alto (0.2)
+            let currentIntensity = keyIsDown(32) || keyIsDown(UP_ARROW) ? 0.25 : volSmooth;
+            spawnFire(currentIntensity);
+        }
+      }
+    } 
+    else { text(letters[i], 0, 0); }
+    pop();
+  }
+}
+
+function applyPhysics() {
+  // ACELERACIÓN POR SONIDO
+  if (volSmooth > 0.01 || keyIsDown(32) || keyIsDown(UP_ARROW)) {
+    // Mapeamos el volumen a una fuerza física (0.01 a 0.2 es el rango normal de voz)
+    let thrustPower = keyIsDown(32) || keyIsDown(UP_ARROW) ? 0.4 : map(volSmooth, 0.01, 0.3, 0.05, 1.2);
+    
+    let angle = rocketBody.angle + PI; 
+    Body.applyForce(rocketBody, rocketBody.position, {
+      x: cos(angle) * thrustPower,
+      y: sin(angle) * thrustPower
+    });
+  }
+  
+  if (keyIsDown(LEFT_ARROW)) Body.setAngularVelocity(rocketBody, -0.05);
+  if (keyIsDown(RIGHT_ARROW)) Body.setAngularVelocity(rocketBody, 0.05);
+}
+
+function spawnFire(intensity) {
+  let baseDist = 205; 
+  let engineOffsets = [-20, 0, 20]; 
+  
+  // A más intensidad, más partículas por frame
+  let particleCount = map(intensity, 0.01, 0.4, 1, 4);
+
+  engineOffsets.forEach(off => {
+    for (let i = 0; i < particleCount; i++) {
+      let fireAngle = rocketBody.angle; 
+      let fX = rocketBody.position.x + cos(fireAngle) * baseDist + cos(rocketBody.angle + HALF_PI) * off;
+      let fY = rocketBody.position.y + sin(fireAngle) * baseDist + sin(rocketBody.angle + HALF_PI) * off;
+      
+      particles.push(new Particle(fX, fY, fireAngle, intensity, rocketBody.velocity));
+    }
+  });
+}
+
+class Particle {
+  constructor(x, y, a, intensity, v) {
+    this.pos = createVector(x, y);
+    // La velocidad de la partícula depende de la intensidad del sonido
+    let speed = map(intensity, 0.01, 0.4, 10, 40);
+    this.vel = p5.Vector.fromAngle(a + random(-0.1, 0.1)).mult(speed);
+    this.vel.add(createVector(v.x, v.y).mult(0.5)); 
+    
+    this.life = 255;
+    this.intensity = intensity;
+    // Partículas más grandes con más sonido
+    this.size = map(intensity, 0.01, 0.4, 10, 45);
+  }
+  
+  update() { 
+    this.pos.add(this.vel); 
+    this.life -= 20; 
+  }
+  
+  display() {
+    noStroke();
+    // COLOR SEMÁNTICO: 
+    // Silencio -> Naranja/Rojo
+    // Grito -> Blanco/Cian (Calor extremo)
+    let colorA = color(255, 100, 0); // Naranja base
+    let colorB = color(150, 255, 255); // Cian/Blanco calor
+    
+    let t = constrain(map(this.intensity, 0.05, 0.3, 0, 1), 0, 1);
+    let baseCol = lerpColor(colorA, colorB, t);
+    
+    fill(red(baseCol), green(baseCol), blue(baseCol), this.life);
+    ellipse(this.pos.x, this.pos.y, this.size);
+  }
+}
+
+function handleParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    particles[i].display();
+    if (particles[i].life <= 0) particles.splice(i, 1);
+  }
+}
+
+function drawStars() {
+  noStroke();
+  stars.forEach(s => { fill(255, s.o); ellipse(s.x, s.y, s.s); });
+}
+```
+
+**Enlace al sketch**
+
+[CØHETE - Unidad 7 FGT Simulación](https://editor.p5js.org/felipegtupb/sketches/WR5kJUq2Q)
+
+**Galería**
+
+<img width="1919" height="1079" alt="Captura de pantalla 2026-04-30 042208" src="https://github.com/user-attachments/assets/ec3ae519-cf81-41bc-8978-7df1a3363d49" />
+
+<img width="1919" height="1079" alt="Captura de pantalla 2026-04-30 042223" src="https://github.com/user-attachments/assets/de249283-2816-45cd-ab41-f21e2c46519a" />
+
+<img width="1919" height="1079" alt="Captura de pantalla 2026-04-30 042308" src="https://github.com/user-attachments/assets/ac8fe7b5-ea85-4cb9-bbfa-c9643f53f794" />
 
 
 ## Bitácora de reflexión
